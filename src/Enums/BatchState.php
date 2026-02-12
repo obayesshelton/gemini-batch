@@ -18,12 +18,12 @@ enum BatchState: string
     public static function fromGeminiState(string $state): self
     {
         return match ($state) {
-            'JOB_STATE_PENDING' => self::Submitted,
-            'JOB_STATE_RUNNING' => self::Running,
-            'JOB_STATE_SUCCEEDED' => self::Completed,
-            'JOB_STATE_FAILED' => self::Failed,
-            'JOB_STATE_CANCELLED' => self::Cancelled,
-            'JOB_STATE_EXPIRED' => self::Expired,
+            'JOB_STATE_PENDING', 'BATCH_STATE_PENDING' => self::Submitted,
+            'JOB_STATE_RUNNING', 'BATCH_STATE_RUNNING' => self::Running,
+            'JOB_STATE_SUCCEEDED', 'BATCH_STATE_SUCCEEDED' => self::Completed,
+            'JOB_STATE_FAILED', 'BATCH_STATE_FAILED' => self::Failed,
+            'JOB_STATE_CANCELLED', 'BATCH_STATE_CANCELLED' => self::Cancelled,
+            'JOB_STATE_EXPIRED', 'BATCH_STATE_EXPIRED' => self::Expired,
             default => self::Failed,
         };
     }
