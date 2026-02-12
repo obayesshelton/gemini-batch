@@ -132,10 +132,6 @@ php artisan gemini-batch:prune             # Clean up old batches
 
 Contributions are welcome! Please submit a pull request.
 
-## Security
-
-If you discover a security vulnerability, please email oliver@obayesshelton.com.
-
 ## License
 
 MIT License. See [LICENSE](LICENSE) for details.
