@@ -9,7 +9,6 @@ use ObayesShelton\GeminiBatch\Exceptions\BatchSubmissionFailed;
 use ObayesShelton\GeminiBatch\Jobs\SubmitBatchJob;
 use ObayesShelton\GeminiBatch\Models\GeminiBatch;
 use ObayesShelton\GeminiBatch\Models\GeminiBatchRequest;
-use ObayesShelton\GeminiBatch\Serializers\AgentSerializer;
 use ObayesShelton\GeminiBatch\Serializers\PrismStructuredSerializer;
 use ObayesShelton\GeminiBatch\Serializers\PrismTextSerializer;
 use ObayesShelton\GeminiBatch\Serializers\RawRequestSerializer;
@@ -122,20 +121,6 @@ class PendingBatch
         $serializer = new PrismStructuredSerializer;
 
         return $this->addSerializedRequest($serializer->serialize($request), $key, $meta);
-    }
-
-    /**
-     * Add a Laravel AI SDK Agent request (requires laravel/ai + echolabsdev/prism).
-     */
-    public function addAgentRequest(object $agent, string $prompt, ?string $key = null, array $meta = []): self
-    {
-        $serializer = new AgentSerializer;
-
-        return $this->addSerializedRequest(
-            $serializer->serialize(['agent' => $agent, 'prompt' => $prompt]),
-            $key,
-            $meta,
-        );
     }
 
     /**

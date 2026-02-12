@@ -94,7 +94,9 @@ class ProcessBatchResultsJob implements ShouldQueue
 
     protected function fetchFileResults(GeminiApiClient $client): array
     {
-        $destFile = $this->apiResponse['dest']['file_name']
+        $destFile = $this->apiResponse['response']['outputFile']
+            ?? $this->apiResponse['response']['output_file']
+            ?? $this->apiResponse['dest']['file_name']
             ?? $this->apiResponse['dest']['fileName']
             ?? null;
 

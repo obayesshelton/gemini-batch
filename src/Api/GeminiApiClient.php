@@ -159,7 +159,10 @@ class GeminiApiClient
      */
     public function getInlineResults(array $batchResponse): array
     {
-        return $batchResponse['dest']['inlinedResponses'] ?? $batchResponse['dest']['inlined_responses'] ?? [];
+        return $batchResponse['response']['inlinedResponses']['inlinedResponses']
+            ?? $batchResponse['response']['inlinedResponses']
+            ?? $batchResponse['output']['inlinedResponses']
+            ?? [];
     }
 
     /**

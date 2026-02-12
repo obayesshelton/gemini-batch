@@ -1,6 +1,6 @@
 {
     "name": "obayesshelton/gemini-batch",
-    "description": "Laravel package for the Google Gemini Batch API with optional PrismPHP and Laravel AI SDK integration",
+    "description": "Laravel package for the Google Gemini Batch API with optional PrismPHP integration",
     "keywords": ["laravel", "gemini", "batch", "ai", "prism", "google"],
     "license": "MIT",
     "authors": [

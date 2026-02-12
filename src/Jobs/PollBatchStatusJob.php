@@ -17,7 +17,9 @@ class PollBatchStatusJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public int $tries = 1;
+    public int $tries = 3;
+
+    public int $backoff = 30;
 
     public function __construct(
         public readonly int $batchId,
@@ -53,7 +55,7 @@ class PollBatchStatusJob implements ShouldQueue
             return;
         }
 
-        $apiState = $response['state'] ?? 'JOB_STATE_FAILED';
+        $apiState = $response['metadata']['state'] ?? $response['state'] ?? 'JOB_STATE_FAILED';
         $state = BatchState::fromGeminiState($apiState);
 
         if ($state === BatchState::Running && $batch->{GeminiBatch::COLUMN_STATE} !== BatchState::Running) {

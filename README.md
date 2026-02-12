@@ -8,23 +8,23 @@
 
 ------
 
-**Queue-driven batch processing for the Google Gemini API in Laravel.** Send hundreds of AI requests as a single batch job at 50% cost — with optional [PrismPHP](https://github.com/echolabsdev/prism) and [Laravel AI SDK](https://github.com/laravel/ai) integration.
+**Queue-driven batch processing for the Google Gemini API in Laravel.** Send hundreds of AI requests as a single batch job at 50% cost — with optional [PrismPHP](https://github.com/echolabsdev/prism) integration.
 
 ```php
 use ObayesShelton\GeminiBatch\Facades\GeminiBatch;
 
 $batch = GeminiBatch::create('gemini-2.0-flash')
-    ->name('entity-enrichment')
-    ->onEachResult(EnrichmentHandler::class)
+    ->name('product-descriptions')
+    ->onEachResult(ProductCopyHandler::class)
     ->then(NotifyAdmin::class);
 
-foreach ($entities as $entity) {
+foreach ($products as $product) {
     $batch->addTextRequest(
         request: Prism::text()
             ->using(Provider::Gemini, 'gemini-2.0-flash')
-            ->withPrompt("Profile {$entity->name}"),
-        key: "entity-{$entity->id}",
-        meta: ['entity_id' => $entity->id],
+            ->withPrompt("Write a short product description for: {$product->name}"),
+        key: "product-{$product->id}",
+        meta: ['product_id' => $product->id],
     );
 }
 
@@ -37,7 +37,6 @@ $batch->dispatch(); // Queue handles submit → poll → process
 - **Queue-driven pipeline** — submit, poll with exponential backoff, process results
 - **Fluent API** — create, add requests, dispatch
 - **PrismPHP integration** — `addTextRequest()` and `addStructuredRequest()` (optional)
-- **Laravel AI SDK integration** — `addAgentRequest()` for Agent classes (optional)
 - **Per-request callbacks** and batch completion handlers
 - **Auto-detection** of inline vs file mode based on payload size
 - **Artisan commands** — `gemini-batch:list`, `status`, `cancel`, `prune`
@@ -60,7 +59,7 @@ GEMINI_API_KEY=your-api-key
 ## Documentation
 
 - **[Getting Started](#getting-started)** — Installation and your first batch
-- **[Adding Requests](#adding-requests)** — Raw payloads, Prism, or Laravel AI SDK Agents
+- **[Adding Requests](#adding-requests)** — Raw payloads or Prism
 - **[Result Handlers](#result-handlers)** — Processing results with per-request callbacks
 - **[Configuration](#configuration)** — Polling intervals, queues, input modes
 - **[Artisan Commands](#artisan-commands)** — Monitor and manage batches from the CLI
@@ -72,8 +71,12 @@ The package works standalone or with PrismPHP. Without Prism, use raw Gemini pay
 ```php
 GeminiBatch::create('gemini-2.0-flash')
     ->addRawRequest(
-        request: ['contents' => [['role' => 'user', 'parts' => [['text' => 'Hello']]]]],
-        key: 'greeting',
+        request: ['contents' => [['role' => 'user', 'parts' => [['text' => 'Describe the process of photosynthesis.']]]]],
+        key: 'photosynthesis',
+    )
+    ->addRawRequest(
+        request: ['contents' => [['role' => 'user', 'parts' => [['text' => 'What are the main ingredients in a Margherita pizza?']]]]],
+        key: 'pizza-ingredients',
     )
     ->dispatch();
 ```
@@ -87,7 +90,6 @@ Three integration layers — use whichever fits your stack:
 | `addRawRequest()` | Nothing | Direct Gemini API payloads |
 | `addTextRequest()` | `echolabsdev/prism` | Prism text generation |
 | `addStructuredRequest()` | `echolabsdev/prism` | Prism structured JSON output |
-| `addAgentRequest()` | `laravel/ai` | Laravel AI SDK Agent classes |
 
 ### Result Handlers
 
@@ -96,11 +98,11 @@ Implement `ResultHandler` to process each result as it arrives:
 ```php
 use ObayesShelton\GeminiBatch\Contracts\ResultHandler;
 
-class EnrichmentHandler implements ResultHandler
+class ProductCopyHandler implements ResultHandler
 {
     public function __invoke(GeminiBatchRequest $request, BatchResult $result): void
     {
-        Entity::find($request->meta['entity_id'])
+        Product::find($request->meta['product_id'])
             ->update(['description' => $result->text()]);
     }
 }
