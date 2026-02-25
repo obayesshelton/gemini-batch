@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use ObayesShelton\GeminiBatch\Api\FileUploader;
 use ObayesShelton\GeminiBatch\Api\GeminiApiClient;
 use ObayesShelton\GeminiBatch\Commands\BatchCancelCommand;
+use ObayesShelton\GeminiBatch\Commands\BatchCheckCommand;
 use ObayesShelton\GeminiBatch\Commands\BatchListCommand;
 use ObayesShelton\GeminiBatch\Commands\BatchPruneCommand;
 use ObayesShelton\GeminiBatch\Commands\BatchStatusCommand;
@@ -48,6 +49,7 @@ class BatchServiceProvider extends ServiceProvider
             $this->commands([
                 BatchListCommand::class,
                 BatchStatusCommand::class,
+                BatchCheckCommand::class,
                 BatchCancelCommand::class,
                 BatchPruneCommand::class,
             ]);
