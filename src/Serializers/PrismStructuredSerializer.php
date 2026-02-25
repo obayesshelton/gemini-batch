@@ -13,17 +13,17 @@ class PrismStructuredSerializer implements PayloadSerializer
      *
      * Adds response_mime_type and response_schema for structured JSON output.
      *
-     * @param  \EchoLabs\Prism\Prism\PendingRequest  $request
+     * @param  \Prism\Prism\Structured\PendingRequest  $request
      */
     public function serialize(mixed $request): array
     {
-        if (! class_exists(\EchoLabs\Prism\Prism\PendingRequest::class)) {
+        if (! class_exists(\Prism\Prism\Structured\PendingRequest::class)) {
             throw new BatchException('PrismPHP is required for structured serialization. Install echolabsdev/prism.');
         }
 
         $resolved = $request->toRequest();
-        $messageMapClass = \EchoLabs\Prism\Providers\Gemini\Maps\MessageMap::class;
-        $schemaMapClass = \EchoLabs\Prism\Providers\Gemini\Maps\SchemaMap::class;
+        $messageMapClass = \Prism\Prism\Providers\Gemini\Maps\MessageMap::class;
+        $schemaMapClass = \Prism\Prism\Providers\Gemini\Maps\SchemaMap::class;
 
         $messageMap = (new $messageMapClass($resolved->messages(), $resolved->systemPrompts()))();
 

@@ -13,16 +13,16 @@ class PrismTextSerializer implements PayloadSerializer
      *
      * Uses Prism's own MessageMap and ToolMap to ensure identical payloads.
      *
-     * @param  \EchoLabs\Prism\Prism\PendingRequest  $request
+     * @param  \Prism\Prism\Text\PendingRequest  $request
      */
     public function serialize(mixed $request): array
     {
-        if (! class_exists(\EchoLabs\Prism\Prism\PendingRequest::class)) {
+        if (! class_exists(\Prism\Prism\Text\PendingRequest::class)) {
             throw new BatchException('PrismPHP is required for text serialization. Install echolabsdev/prism.');
         }
 
         $resolved = $request->toRequest();
-        $messageMapClass = \EchoLabs\Prism\Providers\Gemini\Maps\MessageMap::class;
+        $messageMapClass = \Prism\Prism\Providers\Gemini\Maps\MessageMap::class;
 
         $messageMap = (new $messageMapClass($resolved->messages(), $resolved->systemPrompts()))();
 
@@ -67,7 +67,7 @@ class PrismTextSerializer implements PayloadSerializer
         }
 
         if ($resolved->tools() !== []) {
-            $toolMapClass = \EchoLabs\Prism\Providers\Gemini\Maps\ToolMap::class;
+            $toolMapClass = \Prism\Prism\Providers\Gemini\Maps\ToolMap::class;
 
             return [['function_declarations' => $toolMapClass::map($resolved->tools())]];
         }
