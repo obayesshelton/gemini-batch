@@ -39,7 +39,7 @@ $batch->dispatch(); // Queue handles submit → poll → process
 - **PrismPHP integration** — `addTextRequest()` and `addStructuredRequest()` (optional)
 - **Per-request callbacks** and batch completion handlers
 - **Auto-detection** of inline vs file mode based on payload size
-- **Artisan commands** — `gemini-batch:list`, `status`, `cancel`, `prune`
+- **Artisan commands** — `gemini-batch:list`, `status`, `check`, `cancel`, `prune`
 - **Token tracking** — prompt, completion, and thought tokens per request
 
 ## Installation
@@ -124,6 +124,7 @@ Publish the config with `php artisan vendor:publish --tag=gemini-batch-config`. 
 ```bash
 php artisan gemini-batch:list              # List all batches
 php artisan gemini-batch:status {id}       # Detailed batch status
+php artisan gemini-batch:check             # Dashboard overview of all batch activity
 php artisan gemini-batch:cancel {id}       # Cancel a running batch
 php artisan gemini-batch:prune             # Clean up old batches
 ```
