@@ -111,7 +111,7 @@ class GeminiApiClient
     public function cancelBatch(string $batchName): array
     {
         $response = $this->request()
-            ->post("{$this->baseUrl}/{$batchName}:cancel");
+            ->post("{$this->baseUrl}/{$batchName}:cancel", []);
 
         if ($response->failed()) {
             throw new BatchException("Failed to cancel batch {$batchName}: {$response->body()}");
@@ -126,7 +126,7 @@ class GeminiApiClient
     public function deleteBatch(string $batchName): void
     {
         $response = $this->request()
-            ->post("{$this->baseUrl}/{$batchName}:delete");
+            ->post("{$this->baseUrl}/{$batchName}:delete", []);
 
         if ($response->failed()) {
             throw new BatchException("Failed to delete batch {$batchName}: {$response->body()}");
